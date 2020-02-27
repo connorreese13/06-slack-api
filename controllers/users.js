@@ -21,7 +21,18 @@ router.post("/signup", (req, res) => {
   });
 });
 
-router.post("/login", (req, res) => {});
+router.post("/login", (req, res) => {
+  Users.findOne({ email: req.body.email }).then(response => {
+    if (response) {
+      Users.create(req.body).then(response => {
+        res.send(response);
+      });
+    } else {
+      res.send("email not found");
+    }
+    //console.log(req.body);
+  });
+});
 
 // Export
 module.exports = router;
