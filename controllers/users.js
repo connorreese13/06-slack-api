@@ -2,6 +2,7 @@
 const Users = require("../models/users");
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // Routes
 router.post("/signup", (req, res) => {
@@ -10,12 +11,13 @@ router.post("/signup", (req, res) => {
       let encrypted = bcrypt.hashSync(req.body.password, 10);
       req.body.password = encrypted;
       Users.create(req.body).then(response => {
-        res.send(response);
+        let token = jwt.sign(response.toObject(), "secret");
+        res.send({ token: token });
       });
     } else {
       res.send("Email already exists");
     }
-    //console.log(req.body);
+    console.log(req.body);
   });
 });
 
