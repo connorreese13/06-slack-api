@@ -24,9 +24,13 @@ router.post("/signup", (req, res) => {
 router.post("/login", (req, res) => {
   Users.findOne({ email: req.body.email }).then(response => {
     if (response) {
-      Users.create(req.body).then(response => {
-        res.send(response);
-      });
+      let match = bcrypt.compareSync(req.body.password, response.password);
+      if (match) {
+        let token = jwt.sign(response.toObject(), process.env.SECRET);
+        res.send({ token: token });
+      } else {
+        res.send("wrong password");
+      }
     } else {
       res.send("email not found");
     }
