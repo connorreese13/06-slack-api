@@ -20,13 +20,23 @@ router.post("/", (req, res) => {
     res.send("Not authorized");
   }
 });
+
 router.get("/", (req, res) => {
-  Messages.find(req.query)
-    .populate("user channel")
-    .then(messages => {
-      res.send(messages);
-    })
-    .catch(err => res.send(err));
+  console.log("messages");
+  let token = req.headers.authorization.split(" ")[1];
+  console.log(token);
+  jwt.verify(token, process.env.SECRET, (error, verify) => {
+    if (verify) {
+      Messages.find(req.query)
+        .populate("user channel")
+        .then(messages => {
+          res.send(messages);
+        })
+        .catch(err => res.send(err));
+    } else {
+      res.send({ message: "Not authorized" });
+    }
+  });
 });
 
 // Export
