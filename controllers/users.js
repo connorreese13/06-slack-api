@@ -11,7 +11,7 @@ router.post("/signup", (req, res) => {
       let encrypted = bcrypt.hashSync(req.body.password, 10);
       req.body.password = encrypted;
       Users.create(req.body).then(response => {
-        let token = jwt.sign(response.toObject(), "secret");
+        let token = jwt.sign(response.toObject(), process.env.SECRET);
         res.send({ token: token });
       });
     } else {
