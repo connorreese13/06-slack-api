@@ -12,7 +12,7 @@ router.post("/signup", (req, res) => {
       req.body.password = encrypted;
       Users.create(req.body).then(response => {
         let token = jwt.sign(response.toObject(), process.env.SECRET);
-        res.send({ token: token });
+        res.send(token);
       });
     } else {
       res.send("Email already exists");
@@ -27,7 +27,7 @@ router.post("/login", (req, res) => {
       let match = bcrypt.compareSync(req.body.password, response.password);
       if (match) {
         let token = jwt.sign(response.toObject(), process.env.SECRET);
-        res.send({ token: token });
+        res.send(token);
       } else {
         res.send("wrong password");
       }
