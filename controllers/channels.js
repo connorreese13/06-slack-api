@@ -24,6 +24,7 @@ router.get("/", (req, res) => {
   jwt.verify(token, process.env.SECRET, (error, verify) => {
     if (verify) {
       Channels.find(req.query)
+        .lean()
         .then(channels => {
           res.send(channels);
         })
