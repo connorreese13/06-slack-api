@@ -32,7 +32,7 @@ router.post("/login", (req, res) => {
       if (response) {
         let match = bcrypt.compareSync(req.body.password, response.password);
         if (match) {
-          let user = req.body;
+          let user = response.toObject();
           let token = jwt.sign(user, process.env.SECRET);
           res.send(token);
         } else {
