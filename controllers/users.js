@@ -27,14 +27,19 @@ router.post("/signup", (req, res) => {
 
 router.post("/login", (req, res) => {
   Users.findOne({ email: req.body.email })
-    .select("email password")
+    .select("email password name")
     .then(response => {
       if (response) {
         let match = bcrypt.compareSync(req.body.password, response.password);
         if (match) {
           let user = response.toObject();
           let token = jwt.sign(user, process.env.SECRET);
-          res.send(token);
+          let userObj = {
+            token: token,
+            name: user.name
+          };
+          console.log(userObj);
+          res.send(userObj);
         } else {
           res.send("wrong password");
         }
